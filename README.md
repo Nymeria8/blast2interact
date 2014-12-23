@@ -1,46 +1,31 @@
-# Rapsearch To Xml
+# blast2cytoscape
 
+This program takes the Blastx output in tabular form against a database with interactions between sequences known (file with pairs of interactions and type of interactions) and retrive
+the interactions between our sequences found by homologie. 
 
+Also recives DESEQ2 output files and organize it in other file with the names and respective fold changes
 
-This program takes the Rapseach output and transforms it in a xml file similar to blast xml format.
-This is useful when we want to submit a Rapsearch output file to Blast2Go to perform the annotation step.
-
+This two files can be directly feeded to cytoscape to network construction (http://www.cytoscape.org/)
 
 
 ##Usage:
 
 
-___To transform the output:___
-
 
 In the command line:
-<pre><code>python3 RapsearchToXml.py infile.aln outfile.xml "example@mail.com"
-</code></pre>
-
-
-*The description field is not working after run the blast2go4pipe.I am still figuring it out, but for now, i developed a work around:*
-
- 
-___To get the correct definition on the final annotation file:___
-
-
-1. Run the RapsearchToXml.py script
-2. Run the Blast2Go4Pipe with the output of th previous script
-3. Get the output.dat and open it with Blast2Go with graphical interface. You will see the "seq definition" filled with "-NA-" instead of the actual description. 
-4. Run Blast-Description-Annotator (BDA): Menu >> Tools >> Run BDA - It will replace the "-NA-" for the acession numbers.
-5. Save the annotation to a file
-6. **Then, in  the command line**:
-
-<pre><code>python3 setDescription.py annoationfile.annot newannotationfile.annot "example@mail.com"
+<pre><code>python3 python interactions.py blastoutput correspondance_file output_correspondance output_expression DESEQ2_ouput_files(variable)
 </code></pre>
 
 
 Notes:
 
-+ The RapsearchToXml.py uses fake values for the fields wich dont appear in the output of Rapsearch.
-+ This fields will not interfere with the final result of the Blast2Go annotation.
-+ It takes multiple hits per query
-+ The program uses the Entrez module from [biopython](https://github.com/biopython/biopython) adapted to [NCBI_Mass_Downloader](https://github.com/StuntsPT/NCBI_Mass_Downloader). A big Kudos to the authors;
++ This script was developed to use with the file protein.actions and respective sequences from the string database (http://string-db.org/) 
+but it can be used with other databases or files of interactions, since the file is formated as gene_one {tab} gene_two {tab} interaction, and the names in the files
+corresponds to the ones of the databases.
++ This script takes a blastx output, so its necessary to run it against the database of sequences with outfmt=7, or another tabular type file
++ It only takes he best hit of blast
++ The script sets a cutoff of identity > 90% and alignment>100aa, that can be change directly in the script
++ The ouput with the interactions can be write with the databases names or our sequences names (default). The script can be easily change to use one or another
 
 ##Dependencies:
 
@@ -53,18 +38,7 @@ Notes:
 GPLv2
 
 
-
-##Known limitations:
-
-For now:
-+ It only accepts the rapsearchoutput.aln file
-+ Only works in the Blast2Go edition for comand line Blast2Go4pipe (still figuring it out)
-+ Only works with a sequence name as "name|size1234", where 1234 is used for the size of the sequence
-
-
-
-
 ##Found a bug?
 
-Or maybe just wanto to drop some feedback? Just open an issue on github!
+Or maybe just wan to drop some feedback? Just open an issue on github!
    
